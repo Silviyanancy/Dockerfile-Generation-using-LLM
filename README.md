@@ -68,7 +68,7 @@ http://127.0.0.1:5000/generate-dockerfile
 }
 ```
 
-### Dockerfile manually working with LLM
+### Dockerfile generation by manually working with LLM on CLI
 
 ![DockerFile Generation in CLI](outputs/Phase1_1.png)
 ![DockerFile Generation in CLI](outputs/Phase1_2.png)
