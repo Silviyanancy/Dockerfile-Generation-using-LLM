@@ -70,8 +70,8 @@ http://127.0.0.1:5000/generate-dockerfile
 
 ### Response: Dockerfile
 
-![DockerFile Test in CLI](D:\GitHub_Projects\DockerLLM\outputs\Phase1_1.png)
-![DockerFile Test in CLI](D:\GitHub_Projects\DockerLLM\outputs\Phase1_2.png)
+![DockerFile Test in CLI](outputs\Phase1_1.png)
+![DockerFile Test in CLI](outputs\Phase1_2.png)
 
 ## Phase 2 - Working with Prompt in UI (HTML&JS)
 
@@ -80,4 +80,4 @@ http://127.0.0.1:5000/generate-dockerfile
 > LLM inference is streamed and parsed in real-time  
 > Dockerfile is displayed on-screen and can be downloaded
 
-![DockerFile Test in UI](D:\GitHub_Projects\DockerLLM\outputs\Phase2.png)
+![DockerFile Test in UI](outputs\Phase2.png)
