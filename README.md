@@ -24,7 +24,7 @@ This project is a lightweight Flask-based REST API that generates Dockerfiles us
 
 ---
 
-## Phase 1 - Working with Prompt in CLI.
+## Phase 1 - Working with Prompt in CLI and Postman
 
 ### Setup Instructions
 
@@ -52,13 +52,13 @@ ollama serve
 python app.py
 ```
 
-4. **Test with Postman**
+5. **Test with Postman**
 
 ```bash
 http://127.0.0.1:5000/generate-dockerfile
 ```
 
-### JSON Body Example:
+6. **JSON Body Example**
 
 ```bash
 {
@@ -68,7 +68,7 @@ http://127.0.0.1:5000/generate-dockerfile
 }
 ```
 
-### Dockerfile generation by manually working with LLM on CLI
+7. **Dockerfile generation by manually working with LLM on CLI**
 
 ![DockerFile Generation in CLI](outputs/Phase1_1.png)
 ![DockerFile Generation in CLI](outputs/Phase1_2.png)
