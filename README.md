@@ -1,13 +1,13 @@
 # Dockerfile Generator using Flask + Ollama + CodeLLaMA
 
-This project is a lightweight Flask-based REST API that generates Dockerfiles using a local open-source LLM (CodeLLaMA-7B-Instruct) via [Ollama](https://ollama.com/). Users can specify a simple prompt ("Write a Dockerfile for a basic Python app"), and the LLM will generate a ready-to-use Dockerfile.
+This project is a lightweight Flask-based REST API that generates Dockerfiles using a local open-source LLM (CodeLLaMA-7B-Instruct) via [Ollama](https://ollama.com/).
 
 ---
 
 ## Features
 
 - REST API built with Flask
-- Uses open-source LLM (CodeLLaMA) via Ollama (no API key required!)
+- Uses open-source LLM (CodeLLaMA) via Ollama (no API key required)
 - Generates Dockerfiles from simple natural language prompts
 - Secure and offline (no OpenAI or Hugging Face APIs required)
 - Tested with Postman
@@ -25,6 +25,8 @@ This project is a lightweight Flask-based REST API that generates Dockerfiles us
 ---
 
 ## Phase 1 - Working with Prompt in CLI and Postman
+
+A simple prompt ("Write a Dockerfile for a basic Python app"), the LLM will generate a ready-to-use Dockerfile.
 
 ### Setup Instructions
 
@@ -74,8 +76,6 @@ http://127.0.0.1:5000/generate-dockerfile
 ![DockerFile Generation in CLI](outputs/Phase1_2.png)
 
 ## Phase 2 - Working with Prompt in UI (HTML&JS)
-
-This is a lightweight Flask web application that uses a local Large Language Model (LLM) via [Ollama](https://ollama.com) to generate Dockerfiles automatically based on natural language prompts.
 
 - Generate a basic Dockerfile for a Python project using Flask, using a local LLM (like `mistral:7b-instruct`)
 - Interface includes a simple frontend built with HTML and JavaScript
