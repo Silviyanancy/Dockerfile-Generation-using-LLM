@@ -1,73 +1,75 @@
+import os
+import zipfile
+import shutil
+
 from flask import Flask, request, jsonify, render_template
 import requests
-import json 
 
-# Creation of instance for flask app
 app = Flask(__name__)
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Home route
+
 @app.route('/')
 def home():
-    #return "Welcome to the Dockerfile Generator (using Ollama & Code LLaMA)"
-    return render_template('index.html')  # Render frontend UI
+    return render_template('index.html')
 
-# Endpoint for dockerfile generator
-@app.route('/generate-dockerfile', methods=['POST'])
-def generate_dockerfile():
-    # Get data from user
-    data = request.get_json()
 
-    # Extract user input # Python dictionary stored in "data"
-    #language = data.get("language", "python")
-    #framework = data.get("framework", "flask")
-    #port = data.get("port", "5000")
-    
-    # Build a prompt - sending this prompt to GPT-3.5 to generate a Dockerfile.
-    prompt = "Write a Dockerfile for a basic Python app"
-    
-    # Send the prompt to OpenAI API
+@app.route('/upload-zip', methods=['POST'])
+def upload_zip():
+    file = request.files.get('zip_file')
+    if not file or not file.filename.endswith('.zip'):
+        return jsonify({"error": "Please upload a valid .zip file"})
+
+    zip_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    extract_path = os.path.join(UPLOAD_FOLDER, "extracted")
+    file.save(zip_path)
+
+    if os.path.exists(extract_path):
+        shutil.rmtree(extract_path)
+    os.makedirs(extract_path)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_path)
+
+    # Check for requirements or package.json
+    req_path = os.path.join(extract_path, 'requirements.txt')
+    pkg_path = os.path.join(extract_path, 'package.json')
+
+    prompt = "Generate a Dockerfile for a project with the following:\n"
+    if os.path.exists(req_path):
+        with open(req_path, 'r') as f:
+            content = f.read()
+        prompt += "\nRequirements.txt:\n" + content
+    elif os.path.exists(pkg_path):
+        with open(pkg_path, 'r') as f:
+            content = f.read()
+        prompt += "\nPackage.json:\n" + content
+    else:
+        prompt += "\nNo requirements.txt or package.json found. Assume a basic Python app.\n"
+
+    print("Sending prompt to LLM:\n", prompt)
+
     try:
         response = requests.post("http://localhost:11434/api/generate", json={
             "model": "mistral:7b-instruct",
             "prompt": prompt,
-            "stream": True
-        }, stream=True)
-        
-        dockerfile = ""
+            "stream": False
+        })
 
-        for line in response.iter_lines():
-            if line:
-                try:
-                    data = json.loads(line.decode("utf-8"))
-                    dockerfile += data.get("response", "")
-                except json.JSONDecodeError:
-                    continue  # skip malformed lines
-
-        dockerfile = dockerfile.strip()
+        result = response.json()
+        dockerfile = result.get("response", "").strip()
+        print("LLM Response:\n", dockerfile)
 
         if not dockerfile:
-            return jsonify({"error": "LLM streamed an empty response."})
+            return jsonify({"error": "LLM returned empty response. Try using a simpler prompt or smaller model."})
 
         return jsonify({"dockerfile": dockerfile})
 
     except Exception as e:
         return jsonify({"error": str(e)})
-       
-       
-        '''# Extract the response 
-        result = response.json()
-        dockerfile = result.get("response", "").strip()
-        
-        if not dockerfile:
-            return jsonify({"error": "LLM response was empty."})
-        
-        
-        # Send the result back to the user - Converts the Dockerfile into JSON format and sends it to the frontend or Postman.
-        return jsonify({"dockerfile": dockerfile})
-    except Exception as e:
-        return jsonify({"error": str(e)})'''
-        
-        
+    
+      
     
 # Start Flask App
 
