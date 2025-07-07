@@ -75,9 +75,9 @@ http://127.0.0.1:5000/generate-dockerfile
 
 ## Phase 2 - Working with Prompt in UI (HTML&JS)
 
-> Generate a basic Dockerfile for a Python project using Flask, using a local LLM (like `mistral:7b-instruct`)  
-> Interface includes a simple frontend built with HTML and JavaScript  
-> LLM inference is streamed and parsed in real-time  
-> Dockerfile is displayed on-screen and can be downloaded
+- Generate a basic Dockerfile for a Python project using Flask, using a local LLM (like `mistral:7b-instruct`)
+- Interface includes a simple frontend built with HTML and JavaScript
+- LLM inference is streamed and parsed in real-time
+- Dockerfile is displayed on-screen and can be downloaded
 
 ![DockerFile Test in UI](outputs/Phase2.png)
