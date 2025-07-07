@@ -67,3 +67,10 @@ http://127.0.0.1:5000/generate-dockerfile
 ```
 
 ### Response: Dockerfile
+
+# Phase 2 - Dockerfile Generator using Flask + Ollama + CodeLLaMA
+
+> Generate a basic Dockerfile for a Python project using Flask, using a local LLM (like `mistral:7b-instruct`)  
+> Interface includes a simple frontend built with HTML and JavaScript  
+> LLM inference is streamed and parsed in real-time  
+> Dockerfile is displayed on-screen and can be downloaded
