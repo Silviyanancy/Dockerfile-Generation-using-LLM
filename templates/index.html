@@ -2,37 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Dockerfile Generator using LLM</title>
+    <title>Dockerfile Generator (Upload Zip)</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         padding: 2rem;
-        background: #f7f7f7;
-      }
-
-      h1 {
-        color: #333;
+        background-color: #f7f7f7;
       }
 
       form {
-        background: #fff;
+        background: white;
         padding: 1.5rem;
         border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         max-width: 600px;
-      }
-
-      label {
-        font-weight: bold;
       }
 
       input,
       button,
       textarea {
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
-        padding: 0.5rem;
+        display: block;
         width: 100%;
+        margin: 1rem 0;
+        padding: 0.6rem;
         font-size: 1rem;
       }
 
@@ -51,67 +43,38 @@
       button:hover {
         background-color: #0056b3;
       }
-
-      .download-btn {
-        background-color: #28a745;
-        margin-top: 0;
-      }
     </style>
   </head>
   <body>
-    <h1>Dockerfile Generator</h1>
-    <p>
-      This tool uses a local LLM (via Ollama) to generate a Dockerfile for your
-      project.
-    </p>
+    <h2>Upload Project (.zip) to Generate Dockerfile</h2>
 
-    <form id="dockerForm">
-      <!-- Optional zip upload (future feature) -->
-      <!--
-    <label for="zipFile">Upload your project (.zip):</label>
-    <input type="file" id="zipFile" name="zipFile" accept=".zip">
-    -->
-
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="zip_file" accept=".zip" required />
       <button type="submit">Generate Dockerfile</button>
     </form>
 
     <h3>Generated Dockerfile:</h3>
     <textarea id="output" readonly></textarea>
-    <button class="download-btn" onclick="downloadDockerfile()">
-      Download Dockerfile
-    </button>
 
     <script>
       document
-        .getElementById("dockerForm")
+        .getElementById("uploadForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
 
-          const response = await fetch("/generate-dockerfile", {
+          const formData = new FormData();
+          const fileInput = document.querySelector('input[type="file"]');
+          formData.append("zip_file", fileInput.files[0]);
+
+          const response = await fetch("/upload-zip", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({}),
+            body: formData,
           });
 
           const result = await response.json();
-          const outputField = document.getElementById("output");
-          outputField.value =
-            result.dockerfile || result.error || "No response received.";
+          document.getElementById("output").value =
+            result.dockerfile || result.error || "No output.";
         });
-
-      function downloadDockerfile() {
-        const text = document.getElementById("output").value;
-        if (!text) {
-          alert("No Dockerfile content to download.");
-          return;
-        }
-
-        const blob = new Blob([text], { type: "text/plain" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Dockerfile";
-        link.click();
-      }
     </script>
   </body>
 </html>
