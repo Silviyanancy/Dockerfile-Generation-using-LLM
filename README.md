@@ -108,3 +108,5 @@ Allows users to upload a `.zip` file of their application (Python/Node.js), and 
 6. LLM generates the Dockerfile, which is displayed in the UI.
 
 ![DockerFile Generation with Upload](outputs/Phase3.png)
+
+## Phase 4 - Automating Docker Image Build & Security Scan with GitHub Actions
