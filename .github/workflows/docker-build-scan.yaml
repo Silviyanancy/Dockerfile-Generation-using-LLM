@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Docker Image from generated Dockerfile
         run: |
-          docker build -f generated/Dockerfile -t docker-llm-app .
+          docker build -f generated/Dockerfile -t docker-llm-app ./generated
 
       - name: Scan Docker Image with Trivy # scan the image you just built
         uses: aquasecurity/trivy-action@master
