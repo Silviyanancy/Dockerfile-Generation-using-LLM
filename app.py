@@ -63,8 +63,14 @@ def upload_zip():
 
         if not dockerfile:
             return jsonify({"error": "LLM returned empty response. Try using a simpler prompt or smaller model."})
+        
+         # Save Dockerfile to ./generated/
+        os.makedirs("generated", exist_ok=True)
+        with open("generated/Dockerfile", "w") as f:
+            f.write(dockerfile)
 
-        return jsonify({"dockerfile": dockerfile})
+        return jsonify({"dockerfile": dockerfile,
+            "message": "Dockerfile saved at generated/Dockerfile"})
 
     except Exception as e:
         return jsonify({"error": str(e)})
