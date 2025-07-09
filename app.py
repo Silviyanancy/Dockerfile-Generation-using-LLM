@@ -1,6 +1,7 @@
 import os
 import zipfile
 import shutil
+import re
 
 from flask import Flask, request, jsonify, render_template
 import requests
@@ -13,6 +14,14 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+def clean_dockerfile_output(raw_output):
+    # Remove markdown code fences and leading descriptions
+    cleaned = re.sub(r"```[a-zA-Z]*", "", raw_output)  # Remove ```Dockerfile or ```bash
+    cleaned = re.sub(r"```", "", cleaned)              # Remove closing ```
+    cleaned = re.sub(r"^Here.*?:", "", cleaned, flags=re.IGNORECASE)  # Remove leading lines like "Here is..."
+    return cleaned.strip()
 
 
 @app.route('/upload-zip', methods=['POST'])
@@ -58,27 +67,27 @@ def upload_zip():
         })
 
         result = response.json()
-        dockerfile = result.get("response", "").strip()
-        print("LLM Response:\n", dockerfile)
+        dockerfile_raw = result.get("response", "").strip()
+        dockerfile_cleaned = clean_dockerfile_output(dockerfile_raw)
+        print("LLM Response (cleaned):\n", dockerfile_cleaned)
 
-        if not dockerfile:
-            return jsonify({"error": "LLM returned empty response. Try using a simpler prompt or smaller model."})
-        
-         # Save Dockerfile to ./generated/
+        if not dockerfile_cleaned:
+            return jsonify({"error": "LLM returned empty response after cleaning. Try using a simpler prompt or smaller model."})
+
+        # Save Dockerfile to ./generated/
         os.makedirs("generated", exist_ok=True)
         with open("generated/Dockerfile", "w") as f:
-            f.write(dockerfile)
+            f.write(dockerfile_cleaned)
 
-        return jsonify({"dockerfile": dockerfile,
-            "message": "Dockerfile saved at generated/Dockerfile"})
+        return jsonify({
+            "dockerfile": dockerfile_cleaned,
+            "message": "Dockerfile saved at generated/Dockerfile"
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)})
-    
-      
-    
-# Start Flask App
 
+
+# Start Flask App
 if __name__ == '__main__':
     app.run(debug=True)
-
